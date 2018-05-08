@@ -22,7 +22,15 @@ To run this code:
 	
 	* set index=C:\DEM\testwatersheds_p2.shp (path to watershed shapefile. The shapefile and the DEM MUST be in the same projection). 
 	
-	* set tiles=130301030504 130301030505 130301030502 (The number of each polygon. Manually input a space separated vector of values for each polygon, these should be single values (not words) and contain NO spaces. 
+	* set tiles=130301030504 130301030505 130301030502 (The number of each polygon. Manually input a space separated vector of values for each polygon, these should be single values (not words) and contain NO spaces. This can easily be generated using the following R commands
+```
+require(rgdal)
+setwd("C:/DEM")
+# Read SHAPEFILE.shp from the current working directory (".")
+ shape <- readOGR(dsn = ".", layer = "testwatersheds_p2")
+ shape@data$X
+ # put the column name for X (e.g., HUC)
+```
 	
 	* set fieldname=HUC12 (The column name of the shapefile attribute table with the watershed values) 
 	
