@@ -19,7 +19,7 @@ REM path to working dir
 set WORK=c:\DEM
 
 REM name of DEM to calculate derivatives from
-set DEM=c:\DEM\testDEM2.tif
+set DEM=%WORK%\\testDEM2.tif
 
 REM path to watershed files. the shapefile and the dem MUST be in the same projection. If you want to re-project use the following:
 rem ogr2ogr -t_srs EPSG:4326 testwatersheds_p.shp testwatersheds.shp
