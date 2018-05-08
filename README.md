@@ -2,7 +2,7 @@
 
 This project is for calculating many derivatives from a DEM for digital soil mapping.
 
-This project takes a DEM as input then smooths and fills the DEM and derives a hillshade. The smoothed and filled DEM is then subset by (buffered) watershed and individual DEMs for each watershed are written to file. Multiple derivatives are then calculated for each watershed, the derivatives are trimmed back to 1/3 (e.g., 10 cells if the original buffer was 30 cells) the buffer distance to avoid edge contamination, and the trimmed derivatives are mosaicked back together by feathering over the 1/3 buffer distance. 
+This project takes a DEM as input then smooths and fills the DEM and derives a hillshade. The smoothed and filled DEM is then subset by (buffered) watershed and individual DEMs for each watershed are written to file. Multiple derivatives are then calculated for each watershed, the derivatives are trimmed back to 1/3 (e.g., 10 cells if the original buffer was 30 cells) the buffer distance to avoid edge contamination, and the trimmed derivatives are mosaicked back together by feathering over the 1/3 buffer distance. Intermediate processing data/files are deleted to save storage space. 
 
 The reason that I took this approach is because I was running into memory issues when trying to calculate derivatives from a 5-m DEM over the state of New Mexico. To solve this I needed a way to tile the DEM in such a way that made physical sense and created hydrologically sound derivatives (I thought that square tiles would produce spurious flow routing values). This entire process probably takes much longer than just running the algorithms on the original DEM, but I also wanted to figure out since I think I would like to use a similar approach to digital soil mapping by different geomorphic environments.
 
@@ -28,9 +28,18 @@ To run this code:
 	
 	* set buffer=30 (Set a buffer distance. This will be used when clipping the DEM by watershed. This distance will then be reduced by 2/3 (e.g., 30/3) and used to trim off edge effects of each derivative before feathering the edges over this distance (buffer/3) when mosaicking)
 	
-4) open OSGeo4W, navigate to the folder where this file is located (cd command), type the file name (e.g., geoprocessing.bat). 
+5. review the list of derivatives (below), if there are some that you do not want, navigate to the code section that creates these derivatives (seem in file comments), and block comment-out these sections (REM is the comment flag in .bat files)
+	
+6. open OSGeo4W, navigate to the folder where this file is located (cd command), type the file name ( geoproces_by_area.bat), and hit enter.  
 
-5) let this run. it will take some time to process depending on the size of the input DEM. This took 3 hours 6 min to run for 3 huc 12 watersheds using a intel i-7 2.60 GHz processor and a 5-m DEM. I need to put this into python to parallelize	
+7.  let this run. it will take some time to process depending on the size of the input DEM. This took 3 hours 6 min to run for 3 huc 12 watersheds using a intel i-7 2.60 GHz processor and a 5-m DEM. 
+
+
+### To DO: 
+Put this into python so that I can parallelize the script. I currently runs on only one processor.
+Use https://sourceforge.net/projects/saga-gis/files/SAGA%20-%20Documentation/Tutorials/Command_Line_Scripting/ as template for python integration. 
+ 
+Note: I decided not to do this in R, because at the time I initiated this project, the RSAGA package no longer communicated with the latest versions of SAGA and the latest SAGA versions had several derivatives that were not available in SAGA 2.0X  	
 
 ### Prerequisites
 
