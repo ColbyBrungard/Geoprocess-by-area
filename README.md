@@ -124,7 +124,7 @@ E. I decided against calculating the vector ruggedness measure (https://onlineli
  
 F. Wind Exposition Index (https://www.earth-syst-dynam.net/6/61/2015/esd-6-61-2015.pdf) this seems more intended for rain shadow effects and climate downscaling than digital soil mapping and I decided against it. However; it probably has some predictive power for large scale modeling. I did run it in the GUI (it takes ~ 30 min for a HUC 12 watershed) and I don't see much utility in it.  
 
-G. SaLEM model is meant for escarpment modeling of initially flat terrain. I suppose that this might work for valley boarders along the Rio Grande, but maybe not useful since I'm not dealing with bedrock, but deposited sediment. 
+G. SaLEM model is meant for escarpment modeling of initially flat terrain. I suppose that this might work for valley borders along the Rio Grande, but maybe not useful since I'm not dealing with bedrock, but deposited sediment. 
 
 H. Compound analysis Useful for Channel Network Base level, channels, relative slope position, but it is broken. Tried commandline and gui and it just hung up. 
 
