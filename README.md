@@ -34,8 +34,7 @@ setwd("C:/DEM")
 # Read SHAPEFILE.shp from the current working directory (".")
  shape <- readOGR(dsn = ".", layer = "testwatersheds_p2")
  shape@data$X
- # put the column name for X (e.g., HUC12)
- 
+ # put the column name for X (e.g., HUC12) 
 ```
 5. review the list of derivatives (below), if there are some that you do not want, navigate to the code section that creates these derivatives (see in file comments), and block comment-out these sections (REM is the comment flag in .bat files)
 	
