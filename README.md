@@ -135,12 +135,7 @@ J. Terrain surface texture. Defaults parameters (epsilon=1, scale=10, method=1, 
 
 ## Authors
 
-* **Colby Brungard, PhD**
-* Plant and Environmental Sciences Dept.  
-* New Mexico State University 
-* Las Cruces, NM 88003
-* cbrung@nmsu.edu
-* +1-575-646-1907
+* **Colby Brungard, PhD**, Plant and Environmental Sciences Dept., New Mexico State University, Las Cruces, NM 88003, cbrung@nmsu.edu, +1-575-646-1907
 
 
 
