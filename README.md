@@ -28,15 +28,15 @@ To run this code:
 	
 	* set buffer=30 (Set a buffer distance. This will be used when clipping the DEM by watershed. This distance will then be reduced by 2/3 (e.g., 30/3) and used to trim off edge effects of each derivative before feathering the edges over this distance (buffer/3) when mosaicking)
 	
-5. review the list of derivatives (below), if there are some that you do not want, navigate to the code section that creates these derivatives (seem in file comments), and block comment-out these sections (REM is the comment flag in .bat files)
+5. review the list of derivatives (below), if there are some that you do not want, navigate to the code section that creates these derivatives (see in file comments), and block comment-out these sections (REM is the comment flag in .bat files)
 	
-6. open OSGeo4W, navigate to the folder where this file is located (cd command), type the file name ( geoproces_by_area.bat), and hit enter.  
+6. open OSGeo4W, navigate to the folder where the .bat file is located (cd command), type the file name ( geoproces_by_area.bat), and hit enter.  
 
 7.  let this run. it will take some time to process depending on the size of the input DEM. This took 3 hours 6 min to run for 3 huc 12 watersheds using a intel i-7 2.60 GHz processor and a 5-m DEM. 
 
 
 ### To DO: 
-Put this into python so that I can parallelize the script. I currently runs on only one processor.
+Put this into python so that I can parallelize the script. It currently runs on only one processor.
 Use https://sourceforge.net/projects/saga-gis/files/SAGA%20-%20Documentation/Tutorials/Command_Line_Scripting/ as template for python integration. 
  
 Note: I decided not to do this in R, because at the time I initiated this project, the RSAGA package no longer communicated with the latest versions of SAGA and the latest SAGA versions had several derivatives that were not available in SAGA 2.0X  	
@@ -49,7 +49,7 @@ SAGA GIS binaries must be downloaded
 ### Covariate Names
 The following covariates will be calculated from the input DEM
 
-1. ELEV_SF Smoothed and filled DEM
+1. 	ELEV_SF Smoothed and filled DEM
 2.	HSHADE Hillshade 
 3.	C_GENE General Curvature
 4.	C_PROF Profile Curvature
