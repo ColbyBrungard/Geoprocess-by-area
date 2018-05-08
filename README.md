@@ -2,7 +2,7 @@
 
 This project is for calculating many derivatives from a DEM for digital soil mapping.
 
-This project takes a DEM as input then smooths and fills the DEM and derives a hillshade. The smoothed and filled DEM is then subset by (buffered) watershed and individual DEMs for each watershed are written to file. Multiple derivatives are then calculated for each watershed, the derivatives are trimmed back to 1/3 (e.g., 10 cells if the original buffer was 30 cells) the buffer distance to avoid edge contamination, and the trimmed derivatives are mosaicked back together by feathering over the 1/3 buffer distance. Intermediate processing data/files are deleted to save storage space. 
+This project takes a DEM as input, trims it to a shapefile boundary, then smooths and fills the DEM and derives a hillshade. The smoothed and filled DEM is then subset by (buffered) watersheds and individual DEMs for each watershed are written to file. Multiple derivatives are then calculated for each watershed, the derivatives are trimmed back by 1/3 (e.g., 10 cells if the original buffer was 30 cells) the buffer distance to avoid edge contamination, and the trimmed derivatives are mosaicked back together by feathering over the 1/3 buffer distance. Intermediate processing data/files are deleted to save storage space. 
 
 The reason that I took this approach is because I was running into memory issues when trying to calculate derivatives from a 5-m DEM over the state of New Mexico. To solve this I needed a way to tile the DEM in such a way that made physical sense and created hydrologically sound derivatives (I thought that square tiles would produce spurious flow routing values). 
 
