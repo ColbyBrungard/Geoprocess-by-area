@@ -19,7 +19,7 @@ REM path to working dir
 set WORK=c:\DEM
 
 REM name of DEM to calculate derivatives from
-set DEM=%WORK%\\testDEM2.tif
+set DEM=%WORK%\testDEM2.tif
 
 REM path to watershed files. the shapefile and the dem MUST be in the same projection. If you want to re-project use the following:
 rem ogr2ogr -t_srs EPSG:4326 testwatersheds_p.shp testwatersheds.shp
@@ -47,10 +47,13 @@ REM open OSGeo4W, navigate to the folder where this file and the base DEM are lo
 REM start time 
 set startTime=%time%
 
-REM 1. Smooth and fill DEM plus analytical hillshade. I decided to smooth to remove artifacts. Note, it doesn't work to smooth and fill by watershed because it floods the DEM to the edges, so do this on the entire DEM.  
+REM 1. Clip DEM to shapefile with buffer, smooth and fill DEM, create analytical hillshade. I decided to smooth to remove artifacts. Note, it doesn't work to smooth and fill by watershed because it floods the DEM to the edges, so do this on the entire DEM.
 
-REM Convert to SAGA filetype
-gdal_translate -of SAGA %DEM% %WORK%\DEM.sdat
+REM Buffer and clip to shapefile
+echo.
+echo ^########## 
+echo now clipping DEM to shapefile boundary
+gdalwarp -cutline %index% -cblend %buffer% -crop_to_cutline -q %DEM% %WORK%\DEM.sdat
 
 echo.
 echo ^########## 
