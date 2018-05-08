@@ -43,7 +43,7 @@ Note: I decided not to do this in R, because at the time I initiated this projec
 
 ### Prerequisites
 
-OSGeo4W must be downloaded and installed
+OSGeo4W must be downloaded and installed, 
 SAGA GIS binaries must be downloaded
 
 ### Covariate Names
