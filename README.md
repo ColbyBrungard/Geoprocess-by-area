@@ -10,7 +10,7 @@ The reason that I took this approach is because I was running into memory issues
 
 To run this code:  
 1. install OSGeo4W available at: https://trac.osgeo.org/osgeo4w/ 
-2. download the latest SagaGIS X binaries? from: https://sourceforge.net/projects/saga-gis/files/ (this code tested with Saga 6.0.2_x64) 
+2. download the latest SagaGIS X binaries from: https://sourceforge.net/projects/saga-gis/files/ (this code tested with Saga 6.0.2_x64) 
 3. download this file and save to the location where you have your DEM
 4. open this batch file (I like Notepadd ++) and change the following (text inside parentheses is for annotation only and should not be included in your file):
 	* set PATH=%PATH%;C:\saga-6.2.0_x64 (change the directory after the " %PATH%," to the location of where saga_cmd.exe is located)
