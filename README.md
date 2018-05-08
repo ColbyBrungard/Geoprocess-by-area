@@ -30,6 +30,7 @@ setwd("C:/DEM")
  shape <- readOGR(dsn = ".", layer = "testwatersheds_p2")
  shape@data$X
  # put the column name for X (e.g., HUC)
+ 
 ```
 	
 	* set fieldname=HUC12 (The column name of the shapefile attribute table with the watershed values) 
