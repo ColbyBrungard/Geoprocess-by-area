@@ -23,14 +23,14 @@ To run this code:
 	* set index=C:\DEM\testwatersheds_p2.shp (path to watershed shapefile. The shapefile and the DEM MUST be in the same projection). 
 	
 	* set tiles=130301030504 130301030505 130301030502 (The number of each polygon. Manually input a space separated vector of values for each polygon, these should be single values (not words) and contain NO spaces. This can easily be generated using the following R commands:
-```{r }
+```r
 require(rgdal)
 setwd("C:/DEM")
 # Read SHAPEFILE.shp from the current working directory (".")
-shape <- readOGR(dsn = ".", layer = "testwatersheds_p2")
-shape@data$X
-# put the column name for X (e.g., HUC12) 	
- ```
+ shape <- readOGR(dsn = ".", layer = "testwatersheds_p2")
+ shape@data$X
+ # put the column name for X (e.g., HUC12) 	
+```	
 	* set fieldname=HUC12 (The column name of the shapefile attribute table with the watershed values) 
 	
 	* set buffer=30 (Set a buffer distance. This will be used when clipping the DEM by watershed. This distance will then be reduced by 2/3 (e.g., 30/3) and used to trim off edge effects of each derivative before feathering the edges over this distance (buffer/3) when mosaicking)
@@ -58,10 +58,8 @@ The following covariates will be calculated from the input DEM
 
 1.  ELEV_SF Smoothed and filled DEM
 2.	HSHADE Hillshade 
-3.	C_GENE General Curvature
 4.	C_PROF Profile Curvature
 5.	C_PLAN Plan Curvature
-6.	C_TANG Tangential Curvature
 7.	C_LONG Longitudinal Curvature
 8.	C_CROS Cross-Sectional Curvature
 9.	C_MINI Minimal Curvature
@@ -81,12 +79,9 @@ The following covariates will be calculated from the input DEM
 23.	MS Mid-Slope position
 24.	TRI Terrain Ruggedness Index
 25.	TSCv Terrain Surface Convexity
-26.	TSCc Terrain Surface Concavity 
-27.	CL Local curvature
-28.	CUP Upslope Curvature
-29.	CD Downslope Curvature 
+26.	TSCc Terrain Surface Concavity  
 30.	CAR Catchment Area
-31.	CSL Catchment Slope
+31. CSL Catchment Slope
 32.	MCA Modified Catchment Area
 33.	SWI Saga Wetness Index 
 34.	PO Positive openness
@@ -101,7 +96,7 @@ B. Sink Filling: Wang & Liu with min slope value of 0.1 degree (the default). Th
 
 C. Analytical hillshade: Azimuth = 315, declination = 45
 
-D. Slope, general, profile, plan, tangential, longitudinal, cross, minimum, maximum, total, and flow line curvature all calculated using the Zevenbergen and Thorne 1987 method. Slope is in percent. 
+D. Slope, profile, plan, longitudinal, cross, minimum, maximum, total, and flow line curvature all calculated using the Zevenbergen and Thorne 1987 method. Slope is in percent. 
 
 E. Convergence index: neighbors = 3x3, method = gradient. "The index is obtained by averaging the bias of the slope directions of the adjacent calls from the direction of the central cell, and subtracting 90 degrees. The possible values of the index range from -90 to +90 degrees. Values for a cell where all eight neighbors drain to the cell (pit) are -90, values for a cell where all eight neighbors drain away from the cell center (peak) is 90, values for a cell where all eight neighbors drain to one direction are 0." From: Kiss, R (2004). Determination of drainage network in digital elevation models, utilities and limitations, Journal of Hungarian Geomathematics, 2, 16-29.)
 
@@ -111,13 +106,16 @@ G. MultiScale Topographic Position Index. Default parameters (scale_min, scale_M
 
 H. MRVBF http://onlinelibrary.wiley.com/doi/10.1029/2002WR001426/abstract. Intended for separating erosional and depositional areas. Valley bottoms = depositional areas. MRVBF: higher values indicate that this is more likely a valley bottom. MRRTF: higher values indicate more likely a ridge. "While MRVBF is a continuous measure, it naturally divides into classes corresponding to the different resolutions and slope thresholds. Values less than 0.5 are not valley bottom areas. Values from 0.5 to 1.5 are considered to be the steepest and smallest resolvable valley bottoms for 25 m DEMs. Flatter and larger valley bottoms are represented by values from 1.5 to 2.5, 2.5 to 3.5, and so on" . According to the paper, T_Slope was set to 44. This was chosen by fitting a power relationship between the resolution and the thresholds listed in paragraph 26 in the paper (the equation is y (t_slope) = 1659.51*(DEM resolution ^-0.819). All other parameters were left to default values as suggested by the paper (section 2.8). You probably want to change this default value for the resolution of your DEM. You can do this by using the above equation, then searching the code for T_Slope and modifying this value in the code. That said, I didn't find much of a difference between the default settings in flat terrain.  
 
-I. Relative heights and slope positions. Didn't see much reason to change the default settings (W=0.5, T=10, E=2)
+I. Relative heights and slope positions. Didn't see much reason to change the default settings (W=0.5, T=10, E=2). 'W: The parameter weights the influence of catchment size on relative elevation (inversely proportional). T: The parameter controls the amount by which a maximum in the neighbourhood of a cell is taken over into the cell (considering the local slope between the cells). The smaller 't' and/or the smaller the slope, the more of the maximum value is taken over into the cell. This results in a greater generalization/smoothing of the result. The greater 't' and/or the higher the slope, the less is taken over into the cell and the result will show a more irregular pattern caused by small changes in elevation between the cells. E: The parameter controls the position of relative height maxima as a function of slope.' See https://gis.stackexchange.com/questions/154172/saga-tool-relative-heights-and-slope-positions-what-do-results-tell-me for more details. The following explanations are taken from: Boehner, J. and Selige, T. (2006): Spatial prediction of soil attributes using terrain analysis and climate regionalisation. In: Boehner, J., McCloy, K.R., Strobl, J. [Ed.]: SAGA - Analysis and Modelling Applications, Goettinger Geographische Abhandlungen, Goettingen: 13-28. (find this online on the saga homepage also on research gate). 
+	* Normalized height is the vertical offset between the grid cell to its according channel line considering the catchment area of a particular point and is scaled from 0 to 1, where values close to one are higher localized areas and values close to 0 are lower positions. I found this to be particularly useful in distinquishing alluvial fans (and variations within fans) from the channels. I'm unsure how helpful this will be in mountinous terrain. I do not calculate standardized height as this just rescales normalized height by multiplying by actual elevation. I found that an index (0-1) made more sense.  
+
+	* Mid slope position is a quantification of the middle distance between ridge crest and valley. Midslope positions are assigned a value of 0, while ridge and valley positions are assigned values closer to 1. I believe that this may be an important predictor in mountinous terrain where it may approximate the middle 1/3 of the mountain slopes used to describe the geomorphic position in the field book for sampling and describing soils. This was originally intended to be used for modeling cold air drainage to identify the midslope positions that are likely to be the warmest so possibly this may also describe something about vegetation which may influence soil development. Also note, that if you symbolize this variable with a red-blue color scheme you can get a pattern quite reminiscient of 1960's phsycodelic rock album cover. 
+	
+	* Valley depth (also called height below crest line) is the relative height of the grid cell to the nearest ridge/peak. Greater values indicate greater relief between the grid cell and the highest elevation. I believe that the highest elevation is determined by the specific catchment area for each cell. 
 
 J. Terrain Ruggedness Index. Which areas are the most rugged. "Calculates the sum change in elevation between a grid cell and its eight neighbor grid cells. I chose a radius of 10 cells (so for a 5 m DEM, 10x5 = 50m (or 100 m diameter)), and a circular mode. https://www.researchgate.net/publication/259011943_A_Terrain_Ruggedness_Index_that_Quantifies_Topographic_Heterogeneity 
 
 K. Terrain Surface Convexity. Had to take the defaults since I couldn't get access to the paper. Probably a bad idea. Kernel 1 = eight neighborhood 
-
-L. Upslope and downslope curvature. https://www.sciencedirect.com/science/article/pii/009830049190048I. Decided against using up and down local curvature since they weren't very different than up/down curvature. 
 
 M. Saga wetness index. Kept defaults as is. Catchment slope is suspect, but I was testing in relatively flat terrain. 
 
@@ -140,7 +138,7 @@ F. Wind Exposition Index (https://www.earth-syst-dynam.net/6/61/2015/esd-6-61-20
 
 G. SaLEM model is meant for escarpment modeling of initially flat terrain. I suppose that this might work for valley borders along the Rio Grande, but maybe not useful since I'm not dealing with bedrock, but deposited sediment. 
 
-H. Compound analysis Useful for Channel Network Base level, channels, relative slope position, but it is broken. Tried commandline and gui and it just hung up. 
+H. Compound analysis Useful for Channel Network Base level, channels, relative slope position, but it is broken. Tried commandline and gui and it just hung up trying to calculate vertical distance to channel. 
 
 I. Vertical Distance to Channel Network - requires channel network, which I can probably get from ta_compound 0, but which may give me relative elevation
 
@@ -148,6 +146,13 @@ J. Terrain surface texture. Defaults parameters (epsilon=1, scale=10, method=1, 
 
 K. Downslope Distance Gradient - how far downslope does one have to go to descend d meters?, http://onlinelibrary.wiley.com/doi/10.1029/2004WR003130/full. This seems like it could be useful for modeling soil depth, probably in humid environments, but after testing it (with d (distance) = 5, the resolution of the DEM) I found that I couldn't determine what the spatial pattern was. I also found that it wasn't continious so that after 5=m the calculation would start again resulting in a 'chunky' pattern. Even if this was a usuful covariate it would produce patterns (in the soil maps) that would (I feel) be incorrect.  
 
+L. Slope height. This appears to be the inverse of valley depth, but I didn't find it very useful because I found that both ridges and valley bottoms had approximatley the same values and just didn't seem logical. 
+
+M. Local, Upslope and downslope curvature. https://www.sciencedirect.com/science/article/pii/009830049190048I. Decided against using using these because these are the "the distance weighted average local curvature in a cell's upslope contributing area" (http://www.saga-gis.org/saga_tool_doc/2.2.7/ta_morphometry_26.html) and I couldn't figure out why local curvature using the weighted average upslope (and downslope) curvature would be all that useful for digital soil mapping. Also, they were highly correlated with cross curvature and seemed fairly redundant. N. Local curvature was highly correlated with cross and longitudinal curvature.
+
+N. Curvatures: Tangential curvature. Same as Plan curvature. General curvature. Highly correlated with cross curvature and I don't understand general curvaure like I do cross curvature. 
+
+ 
 
 ## Authors
 
