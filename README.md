@@ -32,9 +32,10 @@ To run this code:
 require(rgdal)
 setwd("C:/DEM")
 # Read SHAPEFILE.shp from the current working directory (".")
- shape <- readOGR(dsn = ".", layer = "testwatersheds_p2")
- shape@data$X
- # put the column name for X (e.g., HUC12)
+ shape <- readOGR(dsn = ".", layer = "wbdhu8_a_us_september2017")
+ hu8 <- as.numeric(as.character(shape@data$HUC8))
+#Write to file
+ cat(hu8, file="./HUC8.txt")
 ```	
  
 5. review the list of derivatives (below), if there are some that you do not want, navigate to the code section that creates these derivatives (seem in file comments), and block comment-out these sections (REM is the comment flag in .bat files)
