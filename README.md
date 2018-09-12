@@ -12,7 +12,7 @@ The reason that I took this approach is because I was running into memory issues
 To run this code:  
 1. install OSGeo4W available at: https://trac.osgeo.org/osgeo4w/ 
 2. download SagaGIS from: https://sourceforge.net/projects/saga-gis/files/ (this code tested with Saga 6.0.2_x64) 
-3. open this batch file (I like Notepadd ++) and change the following (text inside parentheses is for annotation only and should not be included in your file):
+3. download and open geoprocessV3.X.bat (this is a batch file, don't double click) (I like Notepadd ++) and change the following (text inside parentheses is for annotation only and should not be included in your file):
 	* set PATH=%PATH%;C:\saga-6.2.0_x64 (change the directory after the " %PATH%," to the location of where saga_cmd.exe is located)
 	* SET SAGA_MLB=C:\saga-6.2.0_x64\tools (make sure the directory matches the directory above)
 	
@@ -51,7 +51,7 @@ OSGeo4W must be downloaded and installed,
 SAGA GIS must be downloaded
 
 ### Covariates
-The following covariates are derived from the input DEM. The first 
+The following covariates are derived from the input DEM.
 
 Number | File Extention | Definition
 --- | --- | ---  
