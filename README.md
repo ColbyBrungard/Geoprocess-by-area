@@ -53,33 +53,33 @@ SAGA GIS must be downloaded
 ### Covariates
 The following covariates are derived from the input DEM.
 
-Number | File Extention | Definition
---- | --- | ---  
-1.  | s     | smoothed elevation
-2.  | hs    | Hillshade 
-3.  | sl    | Slope
-4.  | profc | Profile Curvature
-5.  | planc | Plan Curvature
-6.  | lc    | Longitudinal Curvature
-7.  | cc    | Cross-Sectional Curvature
-8.  | mc    | Min Curvature
-9.	| mxc   | Max Curvature
-10.	| tc    | Total Curvature
-11.	| mbi   | Mass Balance Index
-12.	| ci    | Convergence Index
-13.	| dah   | Diurnal anisotropic heating
-14.	| tpi   | Multi-Scale Topographic Position Index
-15.	| mrvbf | Multiresolution valley bottom flatness
-16.	| mrrtf | Multiresolution ridge top flatness
-17.	| tri   | Terrain Ruggedness Index
-18.	| tsc   | Terrain Surface Convexity  
-19.	| ca    | Catchment Area
-20. | cs    | Catchment Slope
-21.	| mca   | Modified Catchment Area
-22.	| swi   | Saga Wetness Index
-23.	| po    | Positive openness
-24. | spi   | Stream Power Index
-25. | twi   | Topographic wetness index
+| Number | File Extention | Definition |
+| --- | --- | --- | 
+| 1.    | s     | smoothed elevation |
+| 2.    | hs    | Hillshade |
+| 3.    | sl    | Slope |
+| 4.    | profc | Profile Curvature |
+| 5.    | planc | Plan Curvature |
+| 6.    | lc    | Longitudinal Curvature |
+| 7.    | cc    | Cross-Sectional Curvature |
+| 8.    | mc    | Min Curvature |
+| 9.	| mxc   | Max Curvature |
+| 10.	| tc    | Total Curvature |
+| 11.	| mbi   | Mass Balance Index |
+| 12.	| ci    | Convergence Index |
+| 13.	| dah   | Diurnal anisotropic heating |
+| 14.	| tpi   | Multi-Scale Topographic Position Index |
+| 15.	| mrvbf | Multiresolution valley bottom flatness |
+| 16.	| mrrtf | Multiresolution ridge top flatness |
+| 17.	| tri   | Terrain Ruggedness Index |
+| 18.	| tsc   | Terrain Surface Convexity |  
+| 19.	| ca    | Catchment Area |
+| 20.   | cs    | Catchment Slope |
+| 21.	| mca   | Modified Catchment Area |
+| 22.	| swi   | Saga Wetness Index |
+| 23.	| po    | Positive openness |
+| 24.   | spi   | Stream Power Index |
+| 25.   | twi   | Topographic wetness index |
 
 
 ### Settings and thoughts on saga modules that were used.
