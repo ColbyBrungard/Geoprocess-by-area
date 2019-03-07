@@ -19,7 +19,7 @@ To run this code (Windows):
 	* set DEM=C:\DEM\testDEM2.tif (name of full path to DEM)
 	
 	* set indexA=c:\DEM\wbdhu8_a_us_september2017.shp (path to watershed shapefile. This shapefile and the DEM MUST be in the same projection).
-	* set indexB=C:\DEM\wbdhu8_a_us_september2017_proj.shp (path to projected watershed shapefile. This should be projected to )
+	* set indexB=C:\DEM\wbdhu8_a_us_september2017_proj.shp (path to projected watershed shapefile. This should be match the projection that you want the resulting DEM to be in)
 	
 	* set tiles=13030103 (The number of each polygon. Manually input a space separated vector of values for each polygon, these should be single values (not words) and contain NO spaces. This can easily be generated using the R commands below.
  	
@@ -28,7 +28,7 @@ To run this code (Windows):
 	* set bufferA=100 (the buffer distance used to clip the DEM around each shapefile)
 	* set bufferB=20 (the buffer distanced used to trim each derivative)
 
-	* You will also need to modify the t_srs and -tr flags if you want to change the resulting projection and resolution of the derivatives. 
+	* You will also need to modify the t_srs and -tr flags if you want to change the resulting projection and resolution of the derivatives. If the -t_srs flag is modified, ensure that indexB matches this projection.   
 ```r
 require(rgdal)
 setwd("C:/DEM")
