@@ -1,25 +1,25 @@
 # Geoprocess DEMs by watershed.
 
-This project is for calculating many derivatives from a DEM for digital soil mapping.
+This code calculates twenty five terrain derivatives from a DEM by watershed.
 
-This project takes a DEM as input, splits the DEM by watershed (with 100 cell buffer), and then smooths the subset DEM. Multiple derivatives are then calculated for each watershed, and the derivatives are trimmed back to a 20 cell buffer from the original watershed to avoid edge contamination but to leave enough to feather when mosaicking back together. Intermediate processing data/files are deleted to save storage space. This code does NOT hydrologically correct DEMs (i.e., fill) because I found that filling the DEM's produced 'flat' areas in the center of basins. 
+The code takes a digital elevation model as input, splits the DEM by watershed (with 100 cell buffer), and then smooths the subset DEM. Multiple derivatives are then calculated for each watershed, and the derivatives are trimmed back to a 20 cell buffer from the original watershed to avoid edge contamination but to leave enough to feather when mosaicking back together. Intermediate processing data/files are deleted to save storage space. This code does NOT hydrologically correct DEMs (i.e., fill) because I found that filling the DEM's produced 'flat' areas in the center of basins. 
 
-The reason that I took this approach is because I was running into memory issues when trying to calculate derivatives from a 5-m DEM over the state of New Mexico. To solve this I needed a way to tile the DEM in such a way that made physical sense and created hydrologically sound derivatives (I thought that square tiles would produce spurious flow routing values). 
+This approach (splitting by watershed) avoids memory and computational issues when trying to calculate derivatives from large DEMs. Rather than tiling the DEM by square tiles I wanted a tiles that made physical sense and created (mostly) hydrologically sound derivatives. 
 
 
 ## Getting Started
-
-To run this code:  
-1. install OSGeo4W available at: https://trac.osgeo.org/osgeo4w/ 
-2. download SagaGIS from: https://sourceforge.net/projects/saga-gis/files/ (this code tested with Saga 6.0.2_x64) 
-3. download and open geoprocessV3.X.bat (this is a batch file, don't double click) (I like Notepadd ++) and change the following (text inside parentheses is for annotation only and should not be included in your file):
+To run this code (Linux): See linux files (comming soon). 
+To run this code (Windows):  
+1. Install OSGeo4W available at: https://trac.osgeo.org/osgeo4w/ 
+2. Download SagaGIS from: https://sourceforge.net/projects/saga-gis/files/ (this code tested with Saga 6.0.2_x64) 
+3. Download and open geoprocessV3.4.bat (this is a batch file, don't double click) using a text editor (I like Notepadd ++) and change the following (text inside parentheses is for annotation only and should not be included in your file):
 	* set PATH=%PATH%;C:\saga-6.2.0_x64 (change the directory after the " %PATH%," to the location of where saga_cmd.exe is located)
 	* SET SAGA_MLB=C:\saga-6.2.0_x64\tools (make sure the directory matches the directory above)
 	
 	* set DEM=C:\DEM\testDEM2.tif (name of full path to DEM)
 	
-	* set indexA=c:\DEM\wbdhu8_a_us_september2017.shp (path to watershed shapefile. The shapefile and the DEM MUST be in the same projection).
-	* set indexB=C:\DEM\wbdhu8_a_us_september2017_proj.shp (path to projected watershed shapefile, I used albers equal area)
+	* set indexA=c:\DEM\wbdhu8_a_us_september2017.shp (path to watershed shapefile. This shapefile and the DEM MUST be in the same projection).
+	* set indexB=C:\DEM\wbdhu8_a_us_september2017_proj.shp (path to projected watershed shapefile. This should be projected to )
 	
 	* set tiles=13030103 (The number of each polygon. Manually input a space separated vector of values for each polygon, these should be single values (not words) and contain NO spaces. This can easily be generated using the R commands below.
  	
@@ -28,6 +28,7 @@ To run this code:
 	* set bufferA=100 (the buffer distance used to clip the DEM around each shapefile)
 	* set bufferB=20 (the buffer distanced used to trim each derivative)
 
+	* You will also need to modify the t_srs and -tr flags if you want to change the resulting projection and resolution of the derivatives. 
 ```r
 require(rgdal)
 setwd("C:/DEM")
@@ -40,7 +41,7 @@ setwd("C:/DEM")
  
 5. review the list of derivatives (below), if there are some that you do not want, navigate to the code section that creates these derivatives (see in-file comments), and block comment-out these sections (REM is the comment flag in .bat files)
 	
-6. open OSGeo4W, navigate to the folder where this file is located (cd command), type the file name (i.e., GeoprocessV3.1.bat), and hit enter.  
+6. open OSGeo4W, navigate to the folder where this file is located (cd command), type the file name (i.e., GeoprocessV3.4.bat), and hit enter.  
 
 7.  let this run. it will take some time to process depending on the size of the input DEM. 
  
@@ -108,7 +109,7 @@ L. Positive Topographic Openness: I'm not sure this makes much sense in an arid 
 
 M. Mass balance index. Used default parameters: -TSLOPE=15.000000 -TCURVE=0.010000 -THREL=15.000000. http://onlinelibrary.wiley.com/doi/10.1002/jpln.200625039/pdf . The intent of this covariate is to identify areas of potential net sediment deposition (negative values) and areas of potential net erosion (positive values). Areas with a net zero balance between erosion and deposition will have values close to zero. Based on a visual review, to me this seems to nicely capture (on a very local scale) the difference in sholder (positive values), foot/toe slopes (negative values) and summit/backslope areas (areas near zero). According to the paper: "The mass-balance index is derived from transformed f(k, ht, n)values (Eq. 1). As shown in Fig. 2a, high positive MBI values occur at convex terrain forms, like upper slopes and crests, while lower MBI values are associated with valley areas and concave zones at lower slopes. Balanced MBI values close to zero can be found in midslope zones and mean a location of no net loss or net accumulation of material."
 
-### Thoughts on saga modules that I didn't use. 
+### Thoughts on saga modules that were not used. 
 
 A. Morphometric Protection Index took a long time to run and then never produced a result. I'm also not sure what it would be good for. Maybe detecting sinkholes? 
   
@@ -169,9 +170,7 @@ gdalwarp -tr 10 10 -r lanczos -dstnodata -9999 c:\DEM\NM_5m_dtm.tif c:\DEM\NM_10
 echo Finish Time: %time% 
 
 
-	
 2. I also learned that it doesn't work to fill individual sub-watershed DEMs (HUC12) because the boundaries of these watersheds seem to be somewhat random and often fall in flat areas so that filling the DEM floods the DEM to the edges which no longer match up to the neighbor DEM. Filling larger extent watersheds (HUC8) does seem to work because the boundaries of these watersheds seem to correspond to actual hydrological divides in the landscape.  		
- 
  
 3. Multiple attempts using the following code to calculate Slope Height, Valley Depth, Normalized Height, Mid-slope position failed. However; I did get this to run via the gui so I don't know why the code doesn't work. In anycase, this took a fairly long time to run so I decided against calculating these derivatives. Still I think that they could be useful and should maybe be included in individual DSM projects, but will need to be run by watershed. 
  
