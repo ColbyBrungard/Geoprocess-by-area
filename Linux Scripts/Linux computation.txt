@@ -1,4 +1,4 @@
-Geoprocess DEMs by watershed in Linux
+ÔªøGeoprocess DEMs by watershed in Linux
 This section describes the steps to collect Hydrologic Unit Boundaries, 6th level (HUC6) and Hydrologic Unit Boundaries, 8th level (HUC8) data inside Linux system.
 
 The data computation requires digital elevation model (DEM) file as the primary input, and utilizes SAGA-GIS (6.4.0, https://sourceforge.net/projects/saga-gis/) and GDAL (2.3.1, https://www.gdal.org/) to calculate and generate data. Due to the large number of watersheds by HUC6 (total of 336), and by HUC8 (total of 2121), we use two High Performance Computing (HPC) systems to conduct the computations, the Discovery (https://hpc.nmsu.edu/) from New Mexico State University and the RMACC Summit (https://www.colorado.edu/rc/resources/summit) from University of Colorado Boulder, in order to reduce the time required to finish computation of both HUC6 and HUC8 data.
@@ -30,12 +30,12 @@ This part sets up the paths for input files, changes should be made accordingly 
 * $bufferA: The size of primary buffer distance in number of pixels
 * $bufferB: The size of secondary buffer distance in number of pixels
 3. Parse input and execute single-watershed script
-The part parses the input text file which contains a list of HUC6/HUC8 format numbers, and loop through each HUC6/HUC8 number as one of the input parameters to execute Geoprocess_single_watershed_DEP_10_v2.3.sh or Geoporcess_single_watershed_DEP_30_v2.1.sh, in serial. The other parameter is the number of cores used during data computation, as SAGA-GIS and GDAL are capable of multiprocessing, and currently it°¶s setting to the max number of cores available on the computing unit.
+The part parses the input text file which contains a list of HUC6/HUC8 format numbers, and loop through each HUC6/HUC8 number as one of the input parameters to execute Geoprocess_single_watershed_DEP_10_v2.3.sh or Geoporcess_single_watershed_DEP_30_v2.1.sh, in serial. The other parameter is the number of cores used during data computation, as SAGA-GIS and GDAL are capable of multiprocessing, and currently it‚Äôs setting to the max number of cores available on the computing unit.
 
 Geoprocess_single_watershed scripts
 Both Geoprocess_single_watershed_DEP_10_v2.3.sh and Geoporcess_single_watershed_DEP_30_v2.1.sh perform the same steps to generate data for each watershed of HUC6/HUC8 respectively, with exceptions on the output destinations and number derivatives generated. The general steps are as follow:
 0. Loading SAGA-GIS and parsing input variables:
-* The Environment Modules (http://modules.sourceforge.net/) is typically used in HPC systems to manage software efficiently. °ßmodule load°® is an Environment Modules command which alters the Linux environmental variables to add the path of executables and/or libraries so that the users can access such executables and/or libraries. In our case, the program °ßsaga-6.4.0°® is loaded, which itself also loads °ßgdal-2.3.1°® and other dependent software and libraries.
+* The Environment Modules (http://modules.sourceforge.net/) is typically used in HPC systems to manage software efficiently. ‚Äúmodule load‚Äù is an Environment Modules command which alters the Linux environmental variables to add the path of executables and/or libraries so that the users can access such executables and/or libraries. In our case, the program ‚Äúsaga-6.4.0‚Äù is loaded, which itself also loads ‚Äúgdal-2.3.1‚Äù and other dependent software and libraries.
 * For system without the Environment Modules, but already have both SAGA-GIS, GDAL and other dependent software and libraries installed in Linux default location, simple delete this line.
 * For system without the Environment Modules but has installed required software and libraries in other locations, please delete this line, and add the necessary path to the environmental variables such as PATH, LD_LIBRARY_PATH and others accordingly here.
 1. Preprocessing:
