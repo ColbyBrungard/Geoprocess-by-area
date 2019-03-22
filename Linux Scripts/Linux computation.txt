@@ -53,5 +53,4 @@ This part defines bash script functions Trim_gdalwarp() to calculate one derivat
 
 
 
-
 *This work utilized the RMACC Summit supercomputer, which is supported by the National Science Foundation (awards ACI-1532235 and ACI-1532236), the University of Colorado Boulder, and Colorado State University. The Summit supercomputer is a joint effort of the University of Colorado Boulder and Colorado State University.
