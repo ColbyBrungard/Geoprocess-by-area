@@ -25,8 +25,9 @@ This part sets up the hardware resource request for SLURM scheduler, changes sho
 This part sets up the paths for input files, changes should be made accordingly based on the file location.
 * $INPUT_DIR: The main directory for input files
 * $DEM: The location of DEM file
-* $indexA: The location of HUC8 file
-* $indexB: The location of HUC8 file
+*	$indexA: A shapefile of HUC8 or HUC6 watersheds in EPSG:4269 projection
+*	$indexB: A shapefile of HUC8 or HUC6 watersheds in Albers Equal Area projection: "+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=23 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0"
+
 * $bufferA: The size of primary buffer distance in number of pixels
 * $bufferB: The size of secondary buffer distance in number of pixels
 3. Parse input and execute single-watershed script
