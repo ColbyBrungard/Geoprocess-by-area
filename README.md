@@ -109,6 +109,12 @@ L. Positive Topographic Openness: I'm not sure this makes much sense in an arid 
 
 M. Mass balance index. Used default parameters: -TSLOPE=15.000000 -TCURVE=0.010000 -THREL=15.000000. http://onlinelibrary.wiley.com/doi/10.1002/jpln.200625039/pdf . The intent of this covariate is to identify areas of potential net sediment deposition (negative values) and areas of potential net erosion (positive values). Areas with a net zero balance between erosion and deposition will have values close to zero. Based on a visual review, to me this seems to nicely capture (on a very local scale) the difference in sholder (positive values), foot/toe slopes (negative values) and summit/backslope areas (areas near zero). According to the paper: "The mass-balance index is derived from transformed f(k, ht, n)values (Eq. 1). As shown in Fig. 2a, high positive MBI values occur at convex terrain forms, like upper slopes and crests, while lower MBI values are associated with valley areas and concave zones at lower slopes. Balanced MBI values close to zero can be found in midslope zones and mean a location of no net loss or net accumulation of material."
 
+N. Topographic Position Index. Used default parameters: -SCALE_MIN=1 -SCALE_MAX=8 -SCALE_NUM = 3
+-SCALE_MIN= The minimum radius of the search window  
+-SCALE_MAX=8 The maximum radius of the search window
+-SCALE_NUM = 3 The increment used to enlarge the search radius. The search radius is increased until the incremented radius is bigger than the maximum radius. (Using the default parameters, I think that this means that the search radius is increased by 3 cells each time the calculation is repeated, 3, 6, 9, until the last window (9 cells) is larger than the default max (8 cells)). This means that the buffer used to extract the DEM values must be slightly larger than the resulting search window (in this case 9 cells). 
+This algorithim implements uses a multi-scale approach to identify if each individual cell is in a 'valley' or 'ridge' position using a moving-window approach and calculating the differenece between the elevation value and the mean elevation from a neighborhood. Both the size of the neighborhood and the  More information is given at: https://www.wsl.ch/staff/niklaus.zimmermann/programs/aml4_1.html and http://www.jennessent.com/downloads/tpi-poster-tnc_18x22.pdf 
+
 ### Thoughts on saga modules that were not used. 
 
 A. Morphometric Protection Index took a long time to run and then never produced a result. I'm also not sure what it would be good for. Maybe detecting sinkholes? 
