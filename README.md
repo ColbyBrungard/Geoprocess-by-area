@@ -2,26 +2,27 @@
 
 This code calculates twenty five terrain derivatives from a DEM by watershed.
 
-The code takes a digital elevation model as input, splits the DEM by watershed (with 100 cell buffer), and then smooths the subset DEM. Multiple derivatives are then calculated for each watershed, and the derivatives are trimmed back to a 20 cell buffer from the original watershed to avoid edge contamination but to leave enough to feather when mosaicking back together. Intermediate processing data/files are deleted to save storage space. This code does NOT hydrologically correct DEMs (i.e., fill) because I found that filling the DEM's produced 'flat' areas in the center of basins. 
+The code takes a digital elevation model as input, splits the DEM by watershed (with 100 cell buffer), and then smooths the subset DEM. Multiple derivatives are then calculated for each watershed, and the derivatives are trimmed back to a 20 cell buffer from the original watershed to avoid edge contamination but to leave enough to feather when mosaicking back together. Intermediate processing data/files are deleted to save storage space. This code does NOT hydrologically correct DEMs (i.e., fill) because I found that filling the DEM's produced 'flat' areas in the center of basins when working with DEM's at scale. 
 
-This approach (splitting by watershed) avoids memory and computational issues when trying to calculate derivatives from large DEMs. Rather than tiling the DEM by square tiles I wanted a tiles that made physical sense and created (mostly) hydrologically sound derivatives. 
+This approach (splitting by watershed) avoids memory and computational issues when trying to calculate derivatives from large DEMs. Rather than tiling the DEM by square tiles I wanted tiles that made physical sense and created (mostly) hydrologically sound derivatives. 
 
 
 ## Getting Started
-To run this code (Linux): See linux files (comming soon). 
-To run this code (Windows):  
+To run this code on a distributed HPC cluster: See linux files. 
+
+To run this code on a workstation/desktop (Windows):  
 1. Install OSGeo4W available at: https://trac.osgeo.org/osgeo4w/ 
-2. Download SagaGIS from: https://sourceforge.net/projects/saga-gis/files/ (this code tested with Saga 6.0.2_x64) 
+2. Download SagaGIS from: https://sourceforge.net/projects/saga-gis/files/ (this code tested with Saga 6.0.2 [linux and windows] and Saga 7.6.2 [windows only]) 
 3. Download and open geoprocessV3.4.bat (this is a batch file, don't double click) using a text editor (I like Notepadd ++) and change the following (text inside parentheses is for annotation only and should not be included in your file):
 	* set PATH=%PATH%;C:\saga-6.2.0_x64 (change the directory after the " %PATH%," to the location of where saga_cmd.exe is located)
 	* SET SAGA_MLB=C:\saga-6.2.0_x64\tools (make sure the directory matches the directory above)
 	
-	* set DEM=C:\DEM\testDEM2.tif (name of full path to DEM)
+	* set DEM=C:\DEM\testDEM2.tif (name of full path to DEM, make sure to include quotations if there are spaces in the path or file name)
 	
 	* set indexA=c:\DEM\wbdhu8_a_us_september2017.shp (path to watershed shapefile. This shapefile and the DEM MUST be in the same projection).
 	* set indexB=C:\DEM\wbdhu8_a_us_september2017_proj.shp (path to projected watershed shapefile. This should be match the projection that you want the resulting DEM to be in)
 	
-	* set tiles=13030103 (The number of each polygon. Manually input a space separated vector of values for each polygon, these should be single values (not words) and contain NO spaces. This can easily be generated using the R commands below.
+	* set tiles=13030103 (The number of each polygon. Manually input a space separated vector of values for each polygon, these should be single values (not words) and contain NO spaces. This can easily be generated using the sf package in R
  	
 	* set fieldname=HUC8 (The column name of the shapefile attribute table with the watershed values) 
 	
@@ -29,23 +30,14 @@ To run this code (Windows):
 	* set bufferB=20 (the buffer distanced used to trim each derivative)
 
 	* You will also need to modify the t_srs and -tr flags if you want to change the resulting projection and resolution of the derivatives. If the -t_srs flag is modified, ensure that indexB matches this projection.   
-```r
-require(rgdal)
-setwd("C:/DEM")
-# Read SHAPEFILE.shp from the current working directory (".")
- shape <- readOGR(dsn = ".", layer = "wbdhu8_a_us_september2017")
- hu8 <- as.numeric(as.character(shape@data$HUC8))
-# Write to file
- cat(hu8, file="./HUC8.txt")
-```	
- 
+
 5. review the list of derivatives (below), if there are some that you do not want, navigate to the code section that creates these derivatives (see in-file comments), and block comment-out these sections (REM is the comment flag in .bat files)
 	
 6. open OSGeo4W, navigate to the folder where this file is located (cd command), type the file name (i.e., GeoprocessV3.4.bat), and hit enter.  
 
 7.  let this run. it will take some time to process depending on the size of the input DEM. 
  
-Note: I decided not to do this in R, because at the time I initiated this project, the RSAGA package no longer communicated with the latest versions of SAGA and the latest SAGA versions had several derivatives that were not available in SAGA 2.0X  	
+Note: I decided not to do this in R, because at the time I initiated this project, the RSAGA package no longer communicated with the latest versions of SAGA and the latest SAGA versions had several derivatives that were not available in SAGA 2.0X. I probably should have written this in python instead of batch/bash.  	
 
 ### Prerequisites
 OSGeo4W must be downloaded and installed, 
@@ -53,6 +45,7 @@ SAGA GIS must be downloaded
 
 ### Covariates
 The following covariates are derived from the input DEM.
+An explanation of the chosen parameter setting for each module are below. Futher information on parameter settings can be found at: http://www.saga-gis.org/saga_tool_doc/6.2.0/index.html. Users should probalby change the parameters for their own situations. 
 
 | Number | File Extention | Definition |
 | --- | --- | --- | 
@@ -87,23 +80,23 @@ The following covariates are derived from the input DEM.
 
 A. Smoothing: circle-shaped smooting filter with radius of 4 cells 
 
-C. Analytical hillshade: Azimuth = 315, declination = 45 (default parameters)
+C. Analytical hillshade: Azimuth = 315, declination = 45 (default parameters). If date is set to the winter solstice then the resulting analytical hillshade would likely be a proxy for the maximum amount of shadow that a cell might experience and thus represent cooler/wetter vs. warmer/drier microclimates. I think. 
 
 D. Slope calculated using the D-inf (Tarboton, 1997), and is in percent. Profile, plan, longitudinal, cross, minimum, maximum, and total curvature calculated using Zevenbergen and Thorne 1987 method. I tried calculating flow-line curvature, but it never produced an output (even with slope set to the correct units of percent).  
 
 E. Convergence index: neighbors = 3x3, method = gradient. "The index is obtained by averaging the bias of the slope directions of the adjacent calls from the direction of the central cell, and subtracting 90 degrees. The possible values of the index range from -90 to +90 degrees. Values for a cell where all eight neighbors drain to the cell (pit) are -90, values for a cell where all eight neighbors drain away from the cell center (peak) is 90, values for a cell where all eight neighbors drain to one direction are 0." From: Kiss, R (2004). Determination of drainage network in digital elevation models, utilities and limitations, Journal of Hungarian Geomathematics, 2, 16-29.). A good visual explanation of the convergence index can be found at https://sourceforge.net/p/saga-gis/wiki/ta_morphometry_1/
 
-F. Diurnal Anisotropic Heating. The angle is set to 225 which is a southwest angle.
+F. Diurnal Anisotropic Heating. The angle is set to 225 which is a southwest angle. This should approximate, at least in the northern hemisphere, the common observation that southwest aspects are the hottest/driest, while northeast aspects are cooler moister. 
  
 G. MultiScale Topographic Position Index. Default parameters (scale_min, scale_Max, scale_num) seemed good to me. I rather like this as it seems to pull out differences in the age of alluvial fans. 
 
-H. MRVBF/MRTTF http://onlinelibrary.wiley.com/doi/10.1029/2002WR001426/abstract. Intended for separating erosional and depositional areas. Valley bottoms = depositional areas. MRVBF: higher values indicate that this is more likely a valley bottom. MRRTF: higher values indicate more likely a ridge. "While MRVBF is a continuous measure, it naturally divides into classes corresponding to the different resolutions and slope thresholds. Values less than 0.5 are not valley bottom areas. Values from 0.5 to 1.5 are considered to be the steepest and smallest resolvable valley bottoms for 25 m DEMs. Flatter and larger valley bottoms are represented by values from 1.5 to 2.5, 2.5 to 3.5, and so on". According to the paper, T_Slope was set to 32 based on DEM resolution (10 m). All other parameters were left to default values as suggested by the paper (section 5.4).   
+H. MRVBF/MRTTF http://onlinelibrary.wiley.com/doi/10.1029/2002WR001426/abstract. Intended for separating erosional and depositional areas. Valley bottoms = depositional areas. MRVBF: higher values indicate that this is more likely a valley bottom. MRRTF: higher values indicate more likely a ridge. "While MRVBF is a continuous measure, it naturally divides into classes corresponding to the different resolutions and slope thresholds. Values less than 0.5 are not valley bottom areas. Values from 0.5 to 1.5 are considered to be the steepest and smallest resolvable valley bottoms for 25 m DEMs. Flatter and larger valley bottoms are represented by values from 1.5 to 2.5, 2.5 to 3.5, and so on". According to the paper, T_Slope was set to 32 based on DEM resolution (10 m), but should probably be changed for other DEM resolutions. All other parameters were left to default values as suggested by the paper (section 5.4).   
 
 I. Terrain Ruggedness Index. Which areas are the most rugged. "Calculates the sum change in elevation between a grid cell and its eight neighbor grid cells. I chose a radius of 10 cells (so for a 5 m DEM, 10x5 = 50m (or 100 m diameter)), and a circular mode. https://www.researchgate.net/publication/259011943_A_Terrain_Ruggedness_Index_that_Quantifies_Topographic_Heterogeneity 
 
 J. Terrain Surface Convexity. Had to take the defaults since I couldn't get access to the paper. Probably a bad idea. Kernel 1 = eight neighborhood 
 
-K. Saga wetness index. Kept all defaults as is.
+K. Saga wetness index. Kept all defaults as is. Please be aware that this takes an exeptionally long time to calculate, and might best be run seperate from other covariates. Also, this seems to be mostly cpu bound so a faster cpu is probalby going to make this run faster than more memory. Unsure if this could be parallized. 
 
 L. Positive Topographic Openness: I'm not sure this makes much sense in an arid environment, but since it was intended to be input for geomorphological mapping I thought it might be interesting. Note, this calculation depends on a search radius (denoted L) over which the pixel is determined to be positive or negativley open. "larger values of L will highlight larger features and smaller L smaller forms". I tested several radii including 1x the DEM resolution, 5x the DEM resolution, 10x the DEM resolution and 100x the DEM resolution. I found absolutly no difference between 10x and 100x the the DEM resolution, while 1x and 5x were fairly visually similar (values were pretty similar too). However; I did feel that 1x the DEM resolution captured too much noise. I eventually decided that 10x the DEM resolution was the best radius to select as this seemed to highlight ridges and alluvial fan features when tested in mountains and bajadas. This publication best explains openess (Fig. 5 is particularly useful): Yokoyama, R. / Shirasawa, M. / Pike, R.J. (2002): Visualizing topography by openness: A new application of image processing to digital elevation models. Photogrammetric Engineering and Remote Sensing, Vol.68, pp.251-266. If you are using a different DEM resolution than 10m you will need to change the -RADIUS flag in the code.  
 
@@ -113,7 +106,7 @@ N. Topographic Position Index. Used default parameters: -SCALE_MIN=1 -SCALE_MAX=
 -SCALE_MIN= The minimum radius of the search window  
 -SCALE_MAX=8 The maximum radius of the search window
 -SCALE_NUM = 3 The increment used to enlarge the search radius. The search radius is increased until the incremented radius is bigger than the maximum radius. (Using the default parameters, I think that this means that the search radius is increased by 3 cells each time the calculation is repeated, 3, 6, 9, until the last window (9 cells) is larger than the default max (8 cells)). This means that the buffer used to extract the DEM values must be slightly larger than the resulting search window (in this case 9 cells). 
-This algorithim implements uses a multi-scale approach to identify if each individual cell is in a 'valley' or 'ridge' position using a moving-window approach and calculating the differenece between the elevation value and the mean elevation from a neighborhood. Both the size of the neighborhood and the  More information is given at: https://www.wsl.ch/staff/niklaus.zimmermann/programs/aml4_1.html and http://www.jennessent.com/downloads/tpi-poster-tnc_18x22.pdf 
+This algorithim implements uses a multi-scale approach to identify if each individual cell is in a 'valley' or 'ridge' position using a moving-window approach and calculating the differenece between the elevation value and the mean elevation from a neighborhood. More information is given at: https://www.wsl.ch/staff/niklaus.zimmermann/programs/aml4_1.html and http://www.jennessent.com/downloads/tpi-poster-tnc_18x22.pdf 
 
 ### Thoughts on saga modules that were not used. 
 
@@ -127,9 +120,9 @@ D. I decided against calculating the vector ruggedness measure (https://onlineli
  
 E. Wind Exposition Index (https://www.earth-syst-dynam.net/6/61/2015/esd-6-61-2015.pdf) this seems more intended for rain shadow effects and climate downscaling than digital soil mapping and I decided against it. However; it probably has some predictive power for large scale modeling. I did run it in the GUI (it takes ~ 30 min for a HUC 12 watershed) and I don't see much utility in it.  
 
-F. SaLEM model is meant for escarpment modeling of initially flat terrain. I suppose that this might work for valley borders along the Rio Grande, but maybe not useful since I'm not dealing with bedrock, but deposited sediment. 
+F. SaLEM model is meant for escarpment modeling of initially flat terrain. I suppose that this might work for valley borders along larger river systems such as the Rio Grande, NM, USA, but maybe not useful when not dealing with bedrock, but deposited sediment. 
 
-G. Compound analysis - Useful for Channel Network Base level, channels, relative slope position, but it is broken. Tried commandline and gui and it just hung up trying to calculate vertical distance to channel. 
+G. Compound analysis - Useful for Channel Network Base level, channels, relative slope position, but it is broken. Tried commandline and gui and it just hung up trying to calculate vertical distance to channel. Too bad. I think these would be fairly useful.  
 
 H. Vertical Distance to Channel Network - requires channel network, which I can probably get from ta_compound 0, but which may give me relative elevation
 
@@ -141,7 +134,7 @@ K. Slope height. This appears to be the inverse of valley depth, but I didn't fi
 
 L. Local, Upslope and downslope curvature. https://www.sciencedirect.com/science/article/pii/009830049190048I. Decided against using using these because these are the "the distance weighted average local curvature in a cell's upslope contributing area" (http://www.saga-gis.org/saga_tool_doc/2.2.7/ta_morphometry_26.html) and I couldn't figure out why local curvature using the weighted average upslope (and downslope) curvature would be all that useful for digital soil mapping. Also, they were highly correlated with cross curvature and seemed fairly redundant. Local curvature was highly correlated with cross and longitudinal curvature.
 
-M. Curvatures: Tangential curvature. Same as Plan curvature. General curvature. Highly correlated with cross curvature and I don't understand general curvaure like I do cross curvature.
+M. Curvatures: Tangential curvature, very very similar to plan curvature. General curvature, highly correlated with cross curvature and I don't understand general curvaure like I do cross curvature.
 
 N. Relative heights and slope positions. I think that these are very interesting derivatives, they just didn't run when scripting, so probably need to derive these in the GUI. Didn't see much reason to change the default settings (W=0.5, T=10, E=2). 'W: The parameter weights the influence of catchment size on relative elevation (inversely proportional). T: The parameter controls the amount by which a maximum in the neighbourhood of a cell is taken over into the cell (considering the local slope between the cells). The smaller 't' and/or the smaller the slope, the more of the maximum value is taken over into the cell. This results in a greater generalization/smoothing of the result. The greater 't' and/or the higher the slope, the less is taken over into the cell and the result will show a more irregular pattern caused by small changes in elevation between the cells. E: The parameter controls the position of relative height maxima as a function of slope.' See https://gis.stackexchange.com/questions/154172/saga-tool-relative-heights-and-slope-positions-what-do-results-tell-me for more details. The following explanations are taken from: Boehner, J. and Selige, T. (2006): Spatial prediction of soil attributes using terrain analysis and climate regionalisation. In: Boehner, J., McCloy, K.R., Strobl, J. [Ed.]: SAGA - Analysis and Modelling Applications, Goettinger Geographische Abhandlungen, Goettingen: 13-28. (find this online on the saga homepage also on research gate). 
 	* Normalized height is the vertical offset between the grid cell to its according channel line considering the catchment area of a particular point and is scaled from 0 to 1, where values close to one are higher localized areas and values close to 0 are lower positions. I found this to be particularly useful in distinquishing alluvial fans (and variations within fans) from the channels. I'm unsure how helpful this will be in mountinous terrain. I do not calculate standardized height as this just rescales normalized height by multiplying by actual elevation. I found that an index (0-1) made more sense.  
@@ -156,7 +149,7 @@ O. Negative topographic openness: This calculates openness as if viewed from bel
 ### Stuff that didn't work
 1. Each time that a watershed is clipped from the DEM it is clipped and then reprojected. This seemed like a waste of effort and computational time since reprojecting has to be done every time so I tried to reproject the base DEM and then subset by watershed. This might have worked except that when reprojecting (at least with albers equal area) and changing the DEM resultion (from 4.9 to 5) it didn't keep exactly square cells. This wasn't much of a problem except that I kept getting an error that SAGA couldn't use DEMs with non-square cells (the cells were non-square at some ridiculous decimal precision as far as I could tell). In any case I finally decided to just reproject the subset DEM for each watershed. Oh well. 
 
-Please also note that it is a good idea to reproject a DEM since slope doesn't seem to calculate right if the DEM is in geographic coordinate system. I chose to reproject to Albers Equal Area (EPSG: 102008) because I needed a projection that would cover the entire US when I apply this to the NED dataset and because this is the projection of the EDNA dataset. 
+Please also note that it is a good idea to reproject a DEM since slope doesn't seem to calculate right if the DEM is in geographic coordinate system. I chose to reproject to Albers Equal Area (EPSG: 5070) because I needed a projection that would cover the entire US when I apply this to the NED dataset and because this is the projection of the EDNA dataset. 
 
 Here is the code that I learned while trying to fix this: 
 
