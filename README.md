@@ -8,7 +8,7 @@ This approach (splitting by watershed) avoids memory and computational issues wh
 
 
 ## Getting Started
-To run this code on a distributed HPC cluster: See linux files. 
+To run this code on a distributed HPC cluster: See files under the linux scripts folder. 
 
 To run this code on a workstation/desktop (Windows):  
 1. Install OSGeo4W available at: https://trac.osgeo.org/osgeo4w/ 
