@@ -19,7 +19,10 @@ set SAGA_MLB=C:\saga-6.2.0_x64\tools
 REM name of base DEM from which to calculate derivatives
 set DEM=C:\DEM\NM_5m_dtm.tif
 
-REM path to HUC8 watershed files. Both are needed because I clip by the unprojected shapefile and then trim with the projected shapefile. Use the following to gdal command to reproject shapefile if needed: ogr2ogr -f "ESRI Shapefile" wbdhu10_a_us_september2017_proj.shp wbdhu10_a_us_september2017.shp -t_srs EPSG:10200
+REM path to HUC8 watershed files. 
+REM Both are needed because I clip by the unprojected shapefile and then trim with the projected shapefile. 
+REM Use the following to gdal command to reproject shapefile if needed: ogr2ogr -f "ESRI Shapefile" wbdhu10_a_us_september2017_proj.shp wbdhu10_a_us_september2017.shp -t_srs EPSG:10200
+REM Oddly enough using two different projections seems to be key to removing border artefacts caused by buffering in. When I use a different projection to clip and reporject the border artifacts go away... Odd, but it works.
 set indexA=C:\DEM\wbdhu8_a_us_september2017_USboundCONUS.shp
 set indexB=C:\DEM\wbdhu8_a_us_september2017_USboundCONUS_proj.shp
 
