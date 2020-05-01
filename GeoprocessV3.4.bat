@@ -53,6 +53,7 @@ for %%i in (%tiles%) do (
 REM Clip DEM to HUC watershed boundary. 
 REM Note: I tried multi-threaded warping -multi -wo NUM_THREADS=val/ALL_CPUS http://www.gdal.org/gdalwarp.html), but it didn't really seem to speed things up.
 REM CHANGE -t_srs if you want a different output projection. CHANGE -tr if you want a different resolution 10 10 means 10m x 10m 
+REM it is also critical that you set a nodata values otherwise the covariates will be buffered in (as well as outside of the watershed boundary). 
 for %%i in (%tiles%) do (
  echo now subsetting %fieldname% %%i
   gdalwarp -t_srs EPSG:102008 -tr 10 10 -r bilinear -dstnodata -9999 -cutline %indexA% -cwhere "%fieldname% = '%%i'" -crop_to_cutline -cblend %bufferA% -of SAGA %DEM% %%i\%%i.sdat
