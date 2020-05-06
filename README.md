@@ -20,7 +20,7 @@ To run this code on a workstation/desktop (Windows):
 	* set DEM=C:\DEM\testDEM2.tif (name of full path to DEM, make sure to put the entire file path in quotations if there are spaces in the path or file name)
 	
 	* set indexA=c:\DEM\wbdhu8_a_us_september2017.shp (path to watershed shapefile. This shapefile and the DEM MUST be in the same projection).
-	* set indexB=C:\DEM\wbdhu8_a_us_september2017_proj.shp (path to projected watershed shapefile. This should be match the projection that you want the resulting DEM to be in)
+	* set indexB=C:\DEM\wbdhu8_a_us_september2017_proj.shp (path to projected watershed shapefile. This should be match the projection that you want the resulting DEM to be in). Even if you do not necessarily want to reproject, you should, because reprojecting removes boundary artifacts. This is clunky, but it works. 
 	
 	* set tiles=13030103 (The number of each polygon. Manually input a space separated vector of values for each polygon, these should be single values (not words) and contain NO spaces. This can easily be generated using the sf package in R
  	
