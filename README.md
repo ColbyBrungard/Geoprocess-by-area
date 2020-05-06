@@ -17,7 +17,7 @@ To run this code on a workstation/desktop (Windows):
 	* set PATH=%PATH%;C:\saga-6.2.0_x64 (change the directory after the " %PATH%," to the location of where saga_cmd.exe is located)
 	* SET SAGA_MLB=C:\saga-6.2.0_x64\tools (make sure the directory matches the directory above)
 	
-	* set DEM=C:\DEM\testDEM2.tif (name of full path to DEM, make sure to include quotations if there are spaces in the path or file name)
+	* set DEM=C:\DEM\testDEM2.tif (name of full path to DEM, make sure to put the entire file path in quotations if there are spaces in the path or file name)
 	
 	* set indexA=c:\DEM\wbdhu8_a_us_september2017.shp (path to watershed shapefile. This shapefile and the DEM MUST be in the same projection).
 	* set indexB=C:\DEM\wbdhu8_a_us_september2017_proj.shp (path to projected watershed shapefile. This should be match the projection that you want the resulting DEM to be in)
