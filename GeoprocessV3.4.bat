@@ -56,7 +56,7 @@ REM CHANGE -t_srs if you want a different output projection. CHANGE -tr if you w
 REM it is also critical that you set a nodata values otherwise the covariates will be buffered in (as well as outside of the watershed boundary). 
 for %%i in (%tiles%) do (
  echo now subsetting %fieldname% %%i
-  gdalwarp -t_srs EPSG:102008 -tr 10 10 -r bilinear -dstnodata -9999 -cutline %indexA% -cwhere "%fieldname% = '%%i'" -crop_to_cutline -cblend %bufferA% -of SAGA %DEM% %%i\%%i.sdat
+  gdalwarp -t_srs EPSG:102008 -tr 10 10 -r bilinear -multi -dstnodata -9999 -cutline %indexA% -cwhere "%fieldname% = '%%i'" -crop_to_cutline -cblend %bufferA% -of SAGA %DEM% %%i\%%i.sdat
 )
   
 REM Smooth DEM to remove data artifacts using circle-shaped smooting filter with radius of 4 cells 
@@ -87,7 +87,7 @@ for %%i in (%tiles%) do (
    
 	for %%i in (%tiles%) do (
 	 echo now trimming analytical hillshade of %fieldname% %%i
-	 	gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_hsA.sdat %%i\%%i_hs.tif
+	 	gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -multi -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_hsA.sdat %%i\%%i_hs.tif
 	)   
 	   
 		for %%i in (%tiles%) do (	   
@@ -107,7 +107,7 @@ for %%i in (%tiles%) do (
    
 	for %%i in (%tiles%) do (
 	 echo now trimming Profile Curvature of %fieldname% %%i
-	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_profcA.sdat %%i\%%i_profc.tif
+	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -multi -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_profcA.sdat %%i\%%i_profc.tif
 	)   
 	   
 		for %%i in (%tiles%) do (	   
@@ -120,7 +120,7 @@ for %%i in (%tiles%) do (
 
 	for %%i in (%tiles%) do (
 	 echo now trimming Plan Curvature of %fieldname% %%i
-	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_plancA.sdat %%i\%%i_planc.tif
+	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -multi -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_plancA.sdat %%i\%%i_planc.tif
 	)   
 	   
 		for %%i in (%tiles%) do (	   
@@ -133,7 +133,7 @@ for %%i in (%tiles%) do (
 			
 	for %%i in (%tiles%) do (
 	 echo now trimming Longitudinal Curvature of %fieldname% %%i
-	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_lcA.sdat %%i\%%i_lc.tif
+	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -multi -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_lcA.sdat %%i\%%i_lc.tif
 	)   
 	   
 		for %%i in (%tiles%) do (	   
@@ -146,7 +146,7 @@ for %%i in (%tiles%) do (
 		
 	for %%i in (%tiles%) do (
 	 echo now trimming Cross Sectional Curvature of %fieldname% %%i
-	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_ccA.sdat %%i\%%i_cc.tif
+	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -multi -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_ccA.sdat %%i\%%i_cc.tif
 	)   
 	   
 		for %%i in (%tiles%) do (	   
@@ -159,7 +159,7 @@ for %%i in (%tiles%) do (
 		
 	for %%i in (%tiles%) do (
 	 echo now Minimum Curvature of %fieldname% %%i
-	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_mcA.sdat %%i\%%i_mc.tif
+	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -multi -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_mcA.sdat %%i\%%i_mc.tif
 	)   
 	   
 		for %%i in (%tiles%) do (	   
@@ -172,7 +172,7 @@ for %%i in (%tiles%) do (
 		
 	for %%i in (%tiles%) do (
 	 echo now trimming Maximum Curvature of %fieldname% %%i
-	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_mxcA.sdat %%i\%%i_mxc.tif
+	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -multi -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_mxcA.sdat %%i\%%i_mxc.tif
 	)   
 	   
 		for %%i in (%tiles%) do (	   
@@ -185,7 +185,7 @@ for %%i in (%tiles%) do (
 		
 	for %%i in (%tiles%) do (
 	 echo now trimming Total Curvature of %fieldname% %%i
-	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_tcA.sdat %%i\%%i_tc.tif
+	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -multi -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_tcA.sdat %%i\%%i_tc.tif
 	)   
 	   
 		for %%i in (%tiles%) do (	   
@@ -205,7 +205,7 @@ for %%i in (%tiles%) do (
    
 	for %%i in (%tiles%) do (
 	 echo now trimming Convergence Index of %fieldname% %%i
-	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_ciA.sdat %%i\%%i_ci.tif
+	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -multi -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_ciA.sdat %%i\%%i_ci.tif
 	)   
 	   
 		for %%i in (%tiles%) do (	   
@@ -225,7 +225,7 @@ for %%i in (%tiles%) do (
    
 	for %%i in (%tiles%) do (
 	 echo now trimming Diurnal Anisotropic Heating of %fieldname% %%i
-	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_dahA.sdat %%i\%%i_dah.tif
+	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -multi -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_dahA.sdat %%i\%%i_dah.tif
 	)   
 	   
 		for %%i in (%tiles%) do (	   
@@ -245,7 +245,7 @@ for %%i in (%tiles%) do (
    
 	for %%i in (%tiles%) do (
 	 echo now trimming MultiScale Topographic Position Index of %fieldname% %%i
-	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_tpiA.sdat %%i\%%i_tpi.tif
+	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -multi -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_tpiA.sdat %%i\%%i_tpi.tif
 	)   
 	   
 		for %%i in (%tiles%) do (	   
@@ -265,7 +265,7 @@ for %%i in (%tiles%) do (
    
 	for %%i in (%tiles%) do (
 	 echo now trimming MRVBF of %fieldname% %%i
-	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_mrvbfA.sdat %%i\%%i_mrvbf.tif
+	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -multi -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_mrvbfA.sdat %%i\%%i_mrvbf.tif
 	)   
 	   
 		for %%i in (%tiles%) do (	   
@@ -278,7 +278,7 @@ for %%i in (%tiles%) do (
 
 	for %%i in (%tiles%) do (
 	 echo now trimming MRRTF of %fieldname% %%i
-	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_mrrtfA.sdat %%i\%%i_mrrtf.tif
+	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -multi -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_mrrtfA.sdat %%i\%%i_mrrtf.tif
 	)   
 	   
 		for %%i in (%tiles%) do (	   
@@ -298,7 +298,7 @@ for %%i in (%tiles%) do (
    
 	for %%i in (%tiles%) do (
 	 echo now trimming Terrain Ruggedness Index of %fieldname% %%i
-	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_triA.sdat %%i\%%i_tri.tif
+	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -multi -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_triA.sdat %%i\%%i_tri.tif
 	)   
 	   
 		for %%i in (%tiles%) do (	   
@@ -318,7 +318,7 @@ for %%i in (%tiles%) do (
    
 	for %%i in (%tiles%) do (
 	 echo now trimming Terrain Surface Convexity of %fieldname% %%i
-	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_tscA.sdat %%i\%%i_tsc.tif
+	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -multi -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_tscA.sdat %%i\%%i_tsc.tif
 	)   
 	   
 		for %%i in (%tiles%) do (	   
@@ -338,7 +338,7 @@ for %%i in (%tiles%) do (
    
 	for %%i in (%tiles%) do (
 	 echo now trimming Saga wetness index of %fieldname% %%i
-	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_swiA.sdat %%i\%%i_swi.tif
+	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -multi -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_swiA.sdat %%i\%%i_swi.tif
 	)   
 	
 		for %%i in (%tiles%) do (	   
@@ -352,7 +352,7 @@ for %%i in (%tiles%) do (
 		
 	for %%i in (%tiles%) do (
 	 echo now trimming Catchment Slope of %fieldname% %%i
-	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_csA.sdat %%i\%%i_cs.tif
+	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -multi -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_csA.sdat %%i\%%i_cs.tif
 	)
 	
 		for %%i in (%tiles%) do (	   
@@ -365,7 +365,7 @@ for %%i in (%tiles%) do (
 	
 	for %%i in (%tiles%) do (
 	 echo now trimming Modified Catchment Area of %fieldname% %%i
-	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_mcaA.sdat %%i\%%i_mca.tif
+	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -multi -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_mcaA.sdat %%i\%%i_mca.tif
 	)
 	 
 		for %%i in (%tiles%) do (	   
@@ -392,7 +392,7 @@ for %%i in (%tiles%) do (
 
     for %%i in (%tiles%) do (
 	 echo now trimming stream power index of %fieldname% %%i
-	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_spiA.sdat %%i\%%i_spi.tif
+	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -multi -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_spiA.sdat %%i\%%i_spi.tif
 	) 
 	
 		for %%i in (%tiles%) do (	   
@@ -412,7 +412,7 @@ for %%i in (%tiles%) do (
 
     for %%i in (%tiles%) do (
 	 echo now trimming topographic wetness index of %fieldname% %%i
-	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_twiA.sdat %%i\%%i_twi.tif
+	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -multi -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_twiA.sdat %%i\%%i_twi.tif
 	) 	
 		for %%i in (%tiles%) do (	   
 		 del %%i\%%i_twiA.mgrd
@@ -426,12 +426,12 @@ for %%i in (%tiles%) do (
 REM Trim Slope and catchment area, delete intermediate files (this is not done before because SPI and TWI need slope and catchment area as input
 for %%i in (%tiles%) do (
  echo now trimming Slope of %fieldname% %%i
-  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_slA.sdat %%i\%%i_sl.tif
+  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -multi -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_slA.sdat %%i\%%i_sl.tif
 ) 
 
 for %%i in (%tiles%) do (
  echo now trimming Catchment Area index of %fieldname% %%i
-  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_caA.sdat %%i\%%i_ca.tif
+  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -multi -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_caA.sdat %%i\%%i_ca.tif
 )	
 
  for %%i in (%tiles%) do (	   
@@ -460,7 +460,7 @@ for %%i in (%tiles%) do (
    
 	for %%i in (%tiles%) do (
 	 echo now trimming Positive Topographic Openness of %fieldname% %%i
-	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_poA.sdat %%i\%%i_po.tif
+	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -multi -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_poA.sdat %%i\%%i_po.tif
 	)   
 	   
 		for %%i in (%tiles%) do (	   
@@ -479,7 +479,7 @@ for %%i in (%tiles%) do (
    
 	for %%i in (%tiles%) do (
 	 echo now trimming Mass Balance Index of %fieldname% %%i
-	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_mbiA.sdat %%i\%%i_mbi.tif
+	  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -multi -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_mbiA.sdat %%i\%%i_mbi.tif
 	)   
 	   
 		for %%i in (%tiles%) do (	   
@@ -493,7 +493,7 @@ for %%i in (%tiles%) do (
 REM Trim the smoothed DEM ##########
 for %%i in (%tiles%) do (
  echo now trimming elevation of %fieldname% %%i
-  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -dstnodata -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_s.sdat %%i\%%i_s.tif
+  gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -dstnodata -multi -9999 -tr 10 10 -co COMPRESS=DEFLATE %%i\%%i_s.sdat %%i\%%i_s.tif
 	)   
 
 	for %%i in (%tiles%) do (	   
@@ -518,7 +518,7 @@ REM REM for %%i in (%tiles%) do (
    
 	REM REM for %%i in (%tiles%) do (
 	 REM REM echo now X of %fieldname% %%i
-	  REM REM gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -crop_to_cutline -dstnodata -9999 -co COMPRESS=DEFLATE %%i_X.sdat %%i_X.tif
+	  REM REM gdalwarp -cutline %indexB% -cwhere "%fieldname% = '%%i'" -cblend %bufferB% -multi -crop_to_cutline -dstnodata -9999 -co COMPRESS=DEFLATE %%i_X.sdat %%i_X.tif
 	REM REM )   
 	   
 		REM REM for %%i in (%tiles%) do (	   
