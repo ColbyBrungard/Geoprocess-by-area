@@ -37,7 +37,7 @@ To run this code on a workstation/desktop (Windows):
 
 7.  let this run. it will take some time to process depending on the size of the input DEM. 
  
-Note: I decided not to do this in R, because at the time I initiated this project, the RSAGA package no longer communicated with the latest versions of SAGA and the latest SAGA versions had several derivatives that were not available in SAGA 2.0X. I probably should have written this in python instead of batch/bash.  	
+Note: I decided not to do this in R, because at the time I initiated this project, the RSAGA package no longer communicated with the latest versions of SAGA and the latest SAGA versions had several derivatives that were not available in SAGA 2.0X. I probably should have written this in python instead of batch/bash. Also, when using gdalwarp -COMPRESS = DEFLATE and -PREDICTOR = 2 (2 is for integer) or -PREDICTOR = 3 (3 is for float) will highly compress the .tif files.  	
 
 ### Prerequisites
 OSGeo4W must be downloaded and installed, 
