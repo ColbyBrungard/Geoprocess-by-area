@@ -71,7 +71,7 @@ echo %date%:%time%
 
 
 REM Tool: Potential Incoming Solar Radiation ##########
-REM The amount of potential annual insolation that could be receieved at each grid cell for a particular day.  
+REM The amount of potential insolation that could be receieved at each grid cell for a particular date/time period.  
 REM input: Elevation, (optional input is sky view factor, but see -LOCALSVF parameter).
 REM Parameters:
  REM -SOLARCONST; Solar constant (W/m2). Used the default value
