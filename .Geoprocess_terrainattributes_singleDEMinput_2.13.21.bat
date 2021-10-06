@@ -99,7 +99,7 @@ REM Output
 set days=2021-01-22 2021-02-22 2021-03-22 2021-04-22 2021-05-22 2021-06-22 2021-07-22 2021-08-22 2021-09-22 2021-10-22 2021-11-22 2021-12-22
 for %%i in (%days%) do (
 echo now calculating potential incoming solar radiation for %%i
-saga_cmd ta_lighting 2 -GRD_DEM=%basedem% -GRD_DIRECT=%desFol%pisr_dir_%%i.sdat -GRD_DIFFUS=%desFol%pisr_dif.sdat -SOLARCONST=1367.000000 -LOCALSVF=1 -UNITS=0 -SHADOW=1 -LOCATION=1 -PERIOD=1 -DAY=%%i -HOUR_RANGE_MIN=0.000000 -HOUR_RANGE_MAX=24.000000 -HOUR_STEP=4.000000 -METHOD=2 -LUMPED=70.000000
+saga_cmd ta_lighting 2 -GRD_DEM=%basedem% -GRD_DIRECT=%desFol%pisr_dir_%%i.sdat -GRD_DIFFUS=%desFol%pisr_dif_%%i.sdat -SOLARCONST=1367.000000 -LOCALSVF=1 -UNITS=0 -SHADOW=1 -LOCATION=1 -PERIOD=1 -DAY=%%i -HOUR_RANGE_MIN=0.000000 -HOUR_RANGE_MAX=24.000000 -HOUR_STEP=4.000000 -METHOD=2 -LUMPED=70.000000
 )
 echo %date%:%time%
 
